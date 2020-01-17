@@ -1,0 +1,333 @@
+<ion-content>
+    <div class="page-container has-header" (scroll)="checkScroll($event)">
+        <ion-card class="coach-container gradient-green to-top dark ion-padding"
+                  *ngFor="let session of sessions; let i = index;">
+            <div class="card-top-bar">
+                <img class="avatar-image"
+                     [src]="session.coach_user_photo ? session.coach_user_photo : '../../../assets/images/icon_user_avatar.png'"
+                     alt=""/>
+                <button *ngIf="notifications[i]" class="width-25 p-0 background-none" (click)="updateNotificationPushing(session.cs_datetime, i)">
+                  <ion-icon name="notifications-outline" class="width-25" color="danger"></ion-icon>
+                </button>
+                <ion-button class="white-green-button" type="button" color="primary"
+                            (click)="cancelCoachingSession(session)"> CANCEL SESSION
+                </ion-button>
+            </div>
+            <ion-card-header style="padding-bottom:0;">
+                <ion-card-title color="light">
+                    {{language.getWordByLanguage('coachingComingSoon')}}
+                </ion-card-title>
+                <ion-card-subtitle class="color-white">
+                    {{session.coach_user_name ? 'with ' + session.coach_user_name : 'No matched user'}}
+                </ion-card-subtitle>
+                <ion-card-subtitle class="coach-info color-white">
+                    {{session.time_left}}
+                </ion-card-subtitle>
+                <ion-button [disabled]="!session.can_activate" class="white-green-button" expand="block" type="button"
+                            color="primary" style="height:40px;margin-top:10px;font-size:13px;" (click)="callToCoach(session)">
+                    {{language.getWordByLanguage('contactCoach')}}
+                </ion-button>
+            </ion-card-header>
+        </ion-card>
+
+        <ion-card class="coach-container gradient-green to-top dark ion-padding">
+            <div class="card-top-bar">
+                <!--                <img class="avatar-image" src="../../../assets/images/avatar.png" alt=""/>-->
+                <ion-button class="white-green-button" type="button" color="primary" (click)="toggleCalendarShow()">
+                    {{language.getWordByLanguage('nextSession')}}
+                </ion-button>
+            </div>
+            <ion-card-header>
+                <ion-card-title color="light">
+                    {{language.getWordByLanguage('coachingBookSession')}}
+                </ion-card-title>
+            </ion-card-header>
+        </ion-card>
+
+        <ion-card [ngClass]="sessionScheduleOpened_1 ? 'opened' : 'closed'">
+            <ion-card-header class="ion-padding" (click)="toggleSessionScheduleOpened_1()">
+                <ion-card-title>
+                    <h5 class="no-margin has-carrot carrot-gray">{{language.getWordByLanguage('whenSessionTitle')}}</h5>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="card-user-description ion-text-left" [innerHTML]="language.getWordByLanguage('whenSessionDescription')">
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card [ngClass]="sessionScheduleOpened_2 ? 'opened' : 'closed'">
+            <ion-card-header class="ion-padding" (click)="toggleSessionScheduleOpened_2()">
+                <ion-card-title>
+                    <h5 class="no-margin has-carrot carrot-gray">Who will be helping me?</h5>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="card-user-description ion-text-left">
+                All OminumPro counselors are licensed, accredited professionals. We will match you to an available counselor who fits your objectives, preferences, and the type of issues you are dealing with.
+                <br><br>
+                We have found that we are able to provide a successful match most of the time; however, if you start the process and you feel your counselor isn't a good fit for you, you may elect to be matched to a different professional.
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card [ngClass]="sessionScheduleOpened_3 ? 'opened' : 'closed'">
+            <ion-card-header class="ion-padding" (click)="toggleSessionScheduleOpened_3()">
+                <ion-card-title>
+                    <h5 class="no-margin has-carrot carrot-gray">Are coaching calls and therapy confidential?</h5>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="card-user-description ion-text-left">
+                All coaching calls and therapy sessions are 100% confidential.
+                Our coaches and therapists are bound to the same confidentiality and ethics codes as private clinicians. Your coach or therapist might bring an issue back to the OminumPro senior clinical psychologist or supervision team for support.
+                <br><br>
+                If you disclose that you are going to kill yourself or someone else your coach or therapist may be morally and legally bound to disclose information to third parties such as the police or ambulance service. Please see our Privacy Policy for more information.
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card [ngClass]="sessionScheduleOpened_4 ? 'opened' : 'closed'">
+            <ion-card-header class="ion-padding" (click)="toggleSessionScheduleOpened_4()">
+                <ion-card-title>
+                    <h5 class="no-margin has-carrot carrot-gray">How long is a session?</h5>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="card-user-description ion-text-left">
+                Coaching Sessions are 30 minutes while therapy sessions last 60 minutes.
+                You can book a call in working hours or after hours.
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card [ngClass]="sessionGuideOpened ? 'opened' : 'closed'">
+            <ion-card-header class="ion-padding" (click)="toggleSessionGuideOpened()">
+                <ion-card-title>
+                    <h5 class="no-margin has-carrot carrot-gray">{{language.getWordByLanguage('howWorkTitle')}}</h5>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="card-user-description ion-text-left">
+<!--                <app-timeline [data]="timelineData" [titleUpper]="true"></app-timeline>-->
+                <ol>
+                    <li *ngFor="let timeline of timelineData">{{timeline}}</li>
+                </ol>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card [ngClass]="sessionScheduleOpened_5 ? 'opened' : 'closed'">
+            <ion-card-header class="ion-padding" (click)="toggleSessionScheduleOpened_5()">
+                <ion-card-title>
+                    <h5 class="no-margin has-carrot carrot-gray">Cancelling/rescheduling a call</h5>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="card-user-description ion-text-left">
+                All cancellations and reschedules are completed within OminumPro App.
+                You cannot change your calls any other way, including via Outlook/Google Calendar.
+                <br><br>
+                We require a minimum of 24 hours notice for both cancellations and reschedules. Missed appointments or late cancellations will count as service usage and your company will be charged. To reschedule a call, first cancel the original call, then book a new call.
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card class="hide-box-shadow">
+            <ion-card-header>
+                <ion-card-title>
+                    {{language.getWordByLanguage('whatUsersSay')}}
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="no-padding">
+                <ion-slides pager="true" [options]="slidesOpts">
+                    <ion-slide *ngFor="let review of reviews">
+                        <ion-card class="wide-full gradient-green to-left dark slide-card">
+                            <div class="card-top-bar ion-padding">
+                                <img [src]="review.user_photo ? review.user_photo : '../../../assets/images/icon_user_avatar.png'" alt=""/>
+                                <div class="card-info">
+                                    <label class="card-user-name color-white ion-text-left">
+                                        {{review.user_name}}
+                                    </label>
+                                    <label class="card-user-rating ion-text-left">
+                                        <ion-rating [rate]="review.review_rating" readonly="false" size="small"></ion-rating>
+                                    </label>
+                                    <label class="card-user-time color-white ion-text-left">
+                                        {{milliseconds(review.review_datetime) | date: 'medium'}}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="gradient-underline gradient-white"></div>
+                            <ion-card-content class="ion-padding">
+                                <label class="card-user-description color-white ion-text-left" [innerHTML]="review.review_content"></label>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-slide>
+                </ion-slides>
+            </ion-card-content>
+        </ion-card>
+    </div>
+    <div class="overlay gradient-black to-bottom dark" [ngClass]="!calendarShow ? 'hide' : ''">
+        <ion-card class="wide-full">
+            <ion-card-header class="gradient-green to-left dark ion-padding" *ngIf="selectedDay != null">
+                <ion-card-subtitle color="light">{{calendar.year}}</ion-card-subtitle>
+                <ion-card-title color="light">
+                    {{language.weeks[language.getCurrentLanguage()][selectedDay.weekday] + ', ' + language.months[language.getCurrentLanguage()][calendar.month - 1] + ' ' + selectedDay.day}}
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-toolbar *ngIf="selectedDay != null">
+                    <ion-buttons slot="start">
+                        <ion-button slot="icon-only" (click)="getCalendarDates('last')">
+                            <ion-icon name="arrow-back" color="dark"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                    <ion-title class="ion-text-center">
+                        {{language.months[language.getCurrentLanguage()][calendar.month - 1] + ' ' + calendar.year}}
+                    </ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button slot="icon-only" (click)="getCalendarDates('next')">
+                            <ion-icon name="arrow-forward" color="dark"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+                <table style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th class="ion-text-center"><label>S</label></th>
+                            <th class="ion-text-center"><label>M</label></th>
+                            <th class="ion-text-center"><label>T</label></th>
+                            <th class="ion-text-center"><label>W</label></th>
+                            <th class="ion-text-center"><label>T</label></th>
+                            <th class="ion-text-center"><label>F</label></th>
+                            <th class="ion-text-center"><label>S</label></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="calendar != null">
+                        <tr *ngFor="let week of calendar.days; let w = index;">
+                            <td class="ion-text-center" *ngFor="let day of week; let d = index;" (click)="selectDay(w, d)">
+                                <label [ngClass]="(day.selected || day.upcoming ? 'gradient-green color-white' : '') + (day.upcoming ? ' upcoming' : ' dark') + (day.enable ? '' : ' disabled')">
+                                    {{day.day == 'none' ? '' : day.day}}
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex">
+                    <ion-item>
+                        <ion-label class="no-margin" *ngIf="selectedDay != null">
+                          <b> {{language.getWordByLanguage('availableSlots')}}: 
+                            {{selectedDay.day + ' ' + language.months[language.getCurrentLanguage()][calendar.month - 1] + ' ' + calendar.year}}
+                          </b>
+                        </ion-label>
+                    </ion-item>
+                    
+                    <ion-item class="time-picker">
+                      <ion-select [(ngModel)]="timeType" (ionChange)="handleTimeType(timeType)">
+                        <ion-select-option value="30" selected>30 min</ion-select-option>
+                        <ion-select-option value="60">60 min</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                </div>
+
+                <div class="ptb-10">
+                  <div class="ptb-5"> - {{language.getWordByLanguage('morning')}} </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="1">
+                        <span class="slider-nav arrow-prev" (click)="slidePrev(morning, slideWithNavMorning)">
+                          <div class="prev-icon-custom custon-nav" [class.disabled]="morning.isBeginningSlide">
+                            <ion-icon name="arrow-back"></ion-icon>
+                          </div>
+                        </span>
+                      </ion-col>
+
+                      <ion-col size="10">
+                        <ion-slides pager="false" [options]="slideOpts_3" (ionSlideDidChange)="SlideDidChange(morning, slideWithNavMorning)" #slideWithNavMorning>
+                          <ion-slide *ngFor="let s of morning.slidesItems; let i = index;">
+                            <button class="sessionTime" (click)="coachingSessionConfirm('morning', i)"
+                                    [ngClass]="isWhich == 'morning' && timeNumber == i ? 'actived' : ''">
+                              {{s.time + ' ' + language.getWordByLanguage('am')}}
+                            </button>
+                          </ion-slide>
+                        </ion-slides>
+                      </ion-col>
+
+                      <ion-col size="1">
+                        <span class="slider-nav arrow-next" (click)="slideNext(morning, slideWithNavMorning)">
+                          <div class="next-icon-custom custon-nav" [class.disabled]="morning.isEndSlide">
+                            <ion-icon name="arrow-forward"> </ion-icon>
+                          </div>
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+
+                <div class="ptb-10">
+                  <div class="ptb-5"> - {{language.getWordByLanguage('afternoon')}} </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="1">
+                        <span class="slider-nav arrow-prev" (click)="slidePrev(afternoon, slideWithNavAfternoon)">
+                          <div class="prev-icon-custom custon-nav" [class.disabled]="afternoon.isBeginningSlide">
+                            <ion-icon name="arrow-back"></ion-icon>
+                          </div>
+                        </span>
+                      </ion-col>
+
+                      <ion-col size="10">
+                        <ion-slides pager="false" [options]="slideOpts_3" (ionSlideDidChange)="SlideDidChange(afternoon, slideWithNavAfternoon)" #slideWithNavAfternoon>
+                          <ion-slide *ngFor="let s of afternoon.slidesItems; let i = index;">
+                            <button class="sessionTime" (click)="coachingSessionConfirm('afternoon', i)"
+                                    [ngClass]="isWhich == 'afternoon' && timeNumber == i ? 'actived' : ''">
+                              {{s.time + ' ' + language.getWordByLanguage('am')}}
+                            </button>
+                          </ion-slide>
+                        </ion-slides>
+                      </ion-col>
+
+                      <ion-col size="1">
+                        <span class="slider-nav arrow-next" (click)="slideNext(afternoon, slideWithNavAfternoon)">
+                          <div class="next-icon-custom custon-nav" [class.disabled]="afternoon.isEndSlide">
+                            <ion-icon name="arrow-forward"> </ion-icon>
+                          </div>
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+
+                <div class="ptb-10">
+                  <div class="ptb-5"> - {{language.getWordByLanguage('evening')}} </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="1">
+                        <span class="slider-nav arrow-prev" (click)="slidePrev(evening, slideWithNavEvening)">
+                          <div class="prev-icon-custom custon-nav" [class.disabled]="evening.isBeginningSlide">
+                            <ion-icon name="arrow-back"></ion-icon>
+                          </div>
+                        </span>
+                      </ion-col>
+
+                      <ion-col size="10">
+                        <ion-slides pager="false" [options]="slideOpts_3" (ionSlideDidChange)="SlideDidChange(evening, slideWithNavEvening)" #slideWithNavEvening>
+                          <ion-slide *ngFor="let s of evening.slidesItems; let i = index;">
+                            <button class="sessionTime" (click)="coachingSessionConfirm('evening', i)"
+                                    [ngClass]="isWhich == 'evening' && timeNumber == i ? 'actived' : ''">
+                              {{s.time + ' ' + language.getWordByLanguage('am')}}
+                            </button>
+                          </ion-slide>
+                        </ion-slides>
+                      </ion-col>
+
+                      <ion-col size="1">
+                        <span class="slider-nav arrow-next" (click)="slideNext(evening, slideWithNavEvening)">
+                          <div class="next-icon-custom custon-nav" [class.disabled]="evening.isEndSlide">
+                            <ion-icon name="arrow-forward"> </ion-icon>
+                          </div>
+                        </span>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+
+                <ion-toolbar style="margin-top: 20px;">
+                    <ion-buttons slot="end">
+                        <ion-button class="white-green-button" (click)="toggleCalendarShow()">CANCEL</ion-button>
+                        <ion-button [disabled]="calendar && calendar.over_past > 0" class="white-green-button" (click)="requestCoachingSession()">OK
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-card-content>
+        </ion-card>
+    </div>
+</ion-content>

@@ -35,6 +35,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private storage: Storage,
     private zoomService: Zoom
   ) {
+    this.auth.getTokenForZoom();
+
+
+
     this.events.subscribe('show-loading', (options: LoadingControllerOption) => {
       this.isLoading = true;
       if (!options) {

@@ -5,15 +5,27 @@
 // https://www.rac24.com/
 export const environment = {
   production: false,
-  api: 'http://www.rac24.com/',
-  authApi: 'http://www.rac24.com/authorization/',
-  quoteApi: 'http://www.rac24.com/quote/',
-  userApi: 'http://www.rac24.com/user/',
-  surveyApi: 'http://www.rac24.com/survey/',
-  videoApi: 'http://www.rac24.com/videos/',
-  coachingApi: 'http://www.rac24.com/coaching/',
-  toolsApi: 'http://www.rac24.com/tools/',
-  uploadDir: 'http://www.rac24.com/uploads/',
+  api: 'https://www.rac24.com/',
+  authApi: 'https://www.rac24.com/authorization/',
+  quoteApi: 'https://www.rac24.com/quote/',
+  userApi: 'https://www.rac24.com/user/',
+  surveyApi: 'https://www.rac24.com/survey/',
+  videoApi: 'https://www.rac24.com/videos/',
+  coachingApi: 'https://www.rac24.com/coaching/',
+  toolsApi: 'https://www.rac24.com/tools/',
+  uploadDir: 'https://www.rac24.com/uploads/',
+
+  zoom_dev: {
+    clientID: 'n1hU0AbCRRCP1Wgdf15qw',
+    clientSecret: 'zFaMMSDQFgIy2Ew5XNqnQMxMPF0fmPu8',
+    redirectUrl: 'https://rac24.com'
+  },
+  zoom_pro: {
+    clientID: 'QjvkVqDJRyiuZeiMzb5ZOA',
+    clientSecret: 'Wk9tzEEUOXTNNvBFY2htaXjQt8265lGS',
+    redirectUrl: 'https://rac24.com'
+  },
+
   firebaseConfig: {
     apiKey: 'AIzaSyBz5YSUlg8hzTYIcYOT6xXEQAIrha9hFWE',
     authDomain: 'mvpa-e753b.firebaseapp.com',

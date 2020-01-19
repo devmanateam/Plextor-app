@@ -76,9 +76,7 @@ export class LoginPage implements OnInit {
                     email: this.email,
                     password: this.password,
                     ...deviceInfo
-                };
-                alert(">>>>>>>>>>>:" + environment.authApi + 'login')
-                
+                };                
                 this.http.post(environment.authApi + 'login', {...data}, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).subscribe((response: any) => {
                     loading.dismiss();
                     if (response.status === 'success') {

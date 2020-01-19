@@ -1,11 +1,11 @@
-import {Component, ViewChild} from '@angular/core';
-import {LanguageService} from '../../../services/language/language.service';
-import {IonSlides, NavController} from '@ionic/angular';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {UtilsService} from '../../../services/utils/utils.service';
-import {AuthService} from '../../../services/auth/auth.service';
-import {SurveyQuestion, LastQuestion} from '../../../interface/interface';
+import { Component, ViewChild } from '@angular/core';
+import { LanguageService } from '../../../services/language/language.service';
+import { IonSlides, NavController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { UtilsService } from '../../../services/utils/utils.service';
+import { AuthService } from '../../../services/auth/auth.service';
+import { SurveyQuestion, LastQuestion, UserData } from '../../../interface/interface';
 
 @Component({
     selector: 'app-survey-question',
@@ -15,7 +15,7 @@ import {SurveyQuestion, LastQuestion} from '../../../interface/interface';
 export class SurveyQuestionPage {
 
     @ViewChild('slides', null) slides: IonSlides;
-    
+
     bottomTitles = {
         french: 'Vos réponses resteront entièrement confidentielles',
         english: 'Your answers will remain entirely confidential'
@@ -34,17 +34,28 @@ export class SurveyQuestionPage {
     currentIndex: number;
     lastAnswers: boolean[];
     lastQuestion: LastQuestion;
-    
 
+    ratingweekoverall: number = 0;
+    ratingenergylevel: number = 0;
+    ratingmotivationlevel: number = 0;
+    ratingworkload: number = 0;
+    ratingstresslevel: number = 0;
+
+    currentUser: UserData;
     constructor(
         private http: HttpClient,
         private navController: NavController,
         private language: LanguageService,
-        private utils: UtilsService,
+        private utils: UtilsService, private auth: AuthService
     ) {
     }
 
     async ngOnInit() {
+
+        this.auth.currentUser().then((currentUser: UserData) => {
+            this.currentUser = currentUser;
+        })
+
         this.lastQuestion = {
             question: 'In the past month, have any of the following made it hard for you to work effectively (you can choose multiple options)',
             answers: [
@@ -53,7 +64,13 @@ export class SurveyQuestionPage {
             ]
         };
         this.type = Number(localStorage.getItem('surveyType'));
-        this.title = this.type === 0 ? 'wellnessCheck' : 'stressCheck';
+        if (this.type === 0) {
+            this.title = 'wellnessCheck';
+        } else if (this.type === 1) {
+            this.title = 'stressCheck';
+        } else if (this.type === 2) {
+            this.title = 'WeeklyWellbeing';
+        }
         this.hasScore = ['', '', '', '', ''];
         this.scores = [0, 0, 0, 0, 0];
         this.currentIndex = 0;
@@ -95,18 +112,48 @@ export class SurveyQuestionPage {
         const score = this.scores.reduce((a, b) => a + b, 0);
         const percent = score * 5;
         localStorage.setItem('surveyPercent', percent + '');
-        return {score, percent};
+        return { score, percent };
+    }
+
+    navigateToWeeklySurveyScore() {
+        const score = this.calcScore();
+        this.utils.showLoading().then(loading => {
+            const deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
+            const params = {
+                // deviceInfo,
+                user_id: this.currentUser.id,
+                question1: this.ratingweekoverall,
+                question2: this.ratingenergylevel,
+                question3: this.ratingmotivationlevel,
+                question4: this.ratingworkload,
+                question5: this.ratingstresslevel
+            };
+            console.log(">>>>>>>>params", { ...params });
+
+            // this.http.post('http://localhost/Hanna/survey/set_weekly_survey', { ...params }).subscribe((res) => {
+            this.http.post(environment.surveyApi + 'set_weekly_survey', { ...params }).subscribe((res) => {
+                console.log(">>>>>>>>>>>success", res);
+
+                // if (!this.type) {
+                //     const body = { deviceInfo, answers: this.lastAnswers.join() };
+                //     this.http.post(environment.surveyApi + 'save_survey_answers', { ...body }).subscribe(() => { });
+                // }
+                loading.dismiss().then(async () => {
+                    // await this.navController.navigateForward('/survey-score');
+                });
+            });
+        });
     }
 
     navigateToSurveyScore() {
         const score = this.calcScore();
         this.utils.showLoading().then(loading => {
             const deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
-            const params = {deviceInfo, survey_type: this.type, score};
-            this.http.post(environment.surveyApi + 'set_score', {...params}).subscribe(() => {
+            const params = { deviceInfo, survey_type: this.type, score };
+            this.http.post(environment.surveyApi + 'set_score', { ...params }).subscribe(() => {
                 if (!this.type) {
-                    const body = {deviceInfo, answers: this.lastAnswers.join()};
-                    this.http.post(environment.surveyApi + 'save_survey_answers', {...body}).subscribe(() => {});
+                    const body = { deviceInfo, answers: this.lastAnswers.join() };
+                    this.http.post(environment.surveyApi + 'save_survey_answers', { ...body }).subscribe(() => { });
                 }
                 loading.dismiss().then(async () => {
                     await this.navController.navigateForward('/survey-score');
@@ -117,7 +164,7 @@ export class SurveyQuestionPage {
 
     async getQuestions() {
         const surverys = ['wellness', 'stress'];
-        await this.http.get(environment.surveyApi + 'questions', {params: {type: surverys[this.type]}}).toPromise().then((response: any) => {
+        await this.http.get(environment.surveyApi + 'questions', { params: { type: surverys[this.type] } }).toPromise().then((response: any) => {
             this.questions = response;
         });
     }
@@ -130,7 +177,7 @@ export class SurveyQuestionPage {
     }
 
     async getLastQuestion() {
-        await this.http.get(environment.surveyApi + 'lastQuestion', {params: {language: this.language.getCurrentLanguage()}}).toPromise().then((response: any) => {
+        await this.http.get(environment.surveyApi + 'lastQuestion', { params: { language: this.language.getCurrentLanguage() } }).toPromise().then((response: any) => {
             this.lastQuestion = response;
             this.lastAnswers = [];
             for (var answer of response.answers) {

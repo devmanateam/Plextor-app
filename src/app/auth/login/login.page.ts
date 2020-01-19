@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {LanguageService} from '../../../services/language/language.service';
-import {IonInput, NavController} from '@ionic/angular';
-import {UtilsService} from '../../../services/utils/utils.service';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {DeviceInfo} from '../../../interface/interface';
-import {Plugins} from '@capacitor/core';
-const {Device} = Plugins;
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LanguageService } from '../../../services/language/language.service';
+import { IonInput, NavController } from '@ionic/angular';
+import { UtilsService } from '../../../services/utils/utils.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { DeviceInfo } from '../../../interface/interface';
+import { Plugins } from '@capacitor/core';
+const { Device } = Plugins;
 
 @Component({
     selector: 'app-login',
@@ -15,8 +15,8 @@ const {Device} = Plugins;
 })
 export class LoginPage implements OnInit {
 
-    @ViewChild('inputEmail', {static: false}) inputEmail;
-    @ViewChild('inputPassword', {static: false}) inputPassword;
+    @ViewChild('inputEmail', { static: false }) inputEmail;
+    @ViewChild('inputPassword', { static: false }) inputPassword;
 
     email: string;
     password: string;
@@ -76,9 +76,11 @@ export class LoginPage implements OnInit {
                     email: this.email,
                     password: this.password,
                     ...deviceInfo
-                };                
-                this.http.post(environment.authApi + 'login', {...data}, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).subscribe((response: any) => {
+                };
+                this.http.post(environment.authApi + 'login', { ...data }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).subscribe((response: any) => {
                     loading.dismiss();
+                    console.log("logged user:", response);
+
                     if (response.status === 'success') {
                         this.utils.showToast(this.language.getWordByLanguage('loginSuccessMessage')).then(async () => {
                             this.initializeStates();

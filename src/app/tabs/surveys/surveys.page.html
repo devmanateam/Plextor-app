@@ -6,29 +6,21 @@
           {{language.getWordByLanguage('startSurveys')}}
         </h5>
       </ion-card-header>
+
       <ion-card-content class="ion-padding">
         <ion-card class="wide-full surveys-card surveys-wellness" color="light" (click)="prepareSurvey('0')">
           <!-- <img class="icon-image" src="../../../assets/images/heartbeat.png" alt="" /> -->
-         <ion-row class="ion-text-center" style="display: block;">
-            <circle-progress
-                    [percent]="lastScore"
-                    [radius]="35"
-                    [titleColor]="'#10D9B3'"
-                    [titleFontSize]="'12'"
-                    [outerStrokeWidth]="5"
-                    [innerStrokeWidth]="5"
-                    [outerStrokeColor]="'#10D9B3'"
-                    [innerStrokeColor]="'#E7E6E6'"
-                    [animation]="true"
-                    [animationDuration]="500"
-                    [showSubtitle]="false"
-            ></circle-progress>
+          <ion-row class="ion-text-center" style="display: block;">
+            <circle-progress [percent]="lastScore" [radius]="35" [titleColor]="'#10D9B3'" [titleFontSize]="'12'"
+              [outerStrokeWidth]="5" [innerStrokeWidth]="5" [outerStrokeColor]="'#10D9B3'"
+              [innerStrokeColor]="'#E7E6E6'" [animation]="true" [animationDuration]="500" [showSubtitle]="false">
+            </circle-progress>
             <br>
             <ion-label class="color-green" style="font-size: 12px !important;">
-                {{language.getWordByLanguage('lastChecked')}}
+              {{language.getWordByLanguage('lastChecked')}}
             </ion-label>
-         </ion-row>
-          
+          </ion-row>
+
 
           <ion-card-header>
             <ion-card-title class="ion-text-center ion-padding">
@@ -36,7 +28,9 @@
             </ion-card-title>
           </ion-card-header>
         </ion-card>
-        <ion-card class="wide-full surveys-card surveys-stress" color="light" style="margin-top: 30px;" (click)="prepareSurvey('1')">
+
+        <ion-card class="wide-full surveys-card surveys-stress" color="light" style="margin-top: 30px;"
+          (click)="prepareSurvey('1')">
           <img class="icon-image" src="../../../assets/images/flower.png" alt="" />
           <ion-card-header>
             <ion-card-title class="ion-text-center ion-padding">
@@ -44,6 +38,17 @@
             </ion-card-title>
           </ion-card-header>
         </ion-card>
+        
+        <ion-card class="wide-full surveys-card surveys-stress" color="light" style="margin-top: 30px;"
+          (click)="prepareSurvey('2')">
+          <img class="icon-image" src="../../../assets/images/flower.png" alt="" />
+          <ion-card-header>
+            <ion-card-title class="ion-text-center ion-padding">
+              {{language.getWordByLanguage('weeklywellbeingcheck')}}
+            </ion-card-title>
+          </ion-card-header>
+        </ion-card>
+
       </ion-card-content>
     </ion-card>
   </div>

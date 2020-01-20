@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {TabsPage} from './tabs.page';
-import {AuthService} from '../../services/auth/auth.service';
+import { RouterModule, Routes } from '@angular/router';
+import { TabsPage } from './tabs.page';
+import { AuthService } from '../../services/auth/auth.service';
 
 const routes: Routes = [
   {
@@ -135,6 +135,16 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () => import('./contacts/contacts.module').then(m => m.ContactsPageModule),
+            canActivate: [AuthService]
+          }
+        ]
+      },
+      {
+        path: 'feedback',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./feedback/feedback.module').then(m => m.FeedbackPageModule),
             canActivate: [AuthService]
           }
         ]

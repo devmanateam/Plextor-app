@@ -39,7 +39,7 @@ export class TabsPage implements OnInit, OnDestroy {
     ngOnInit() {
         this.level = JSON.parse(localStorage.getItem('level'));
         this.pages = ['main', 'surveys', 'coaching', 'micro-learning', 'tools', 'contacts', 'profile',
-            'prepare-survey', 'prepare-coaching', 'video-summary', 'mindful-select', 'breathing-select'];
+            'prepare-survey', 'prepare-coaching', 'video-summary', 'mindful-select', 'breathing-select', 'feedback'];
         this.page = this.router.url.split('/tabs/')[1];
         this.pageScrolled = false;
     }

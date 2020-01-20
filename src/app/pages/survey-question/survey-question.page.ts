@@ -128,18 +128,13 @@ export class SurveyQuestionPage {
                 question4: this.ratingworkload,
                 question5: this.ratingstresslevel
             };
-            console.log(">>>>>>>>params", { ...params });
-
-            // this.http.post('http://localhost/Hanna/survey/set_weekly_survey', { ...params }).subscribe((res) => {
             this.http.post(environment.surveyApi + 'set_weekly_survey', { ...params }).subscribe((res) => {
                 console.log(">>>>>>>>>>>success", res);
-
-                // if (!this.type) {
-                //     const body = { deviceInfo, answers: this.lastAnswers.join() };
-                //     this.http.post(environment.surveyApi + 'save_survey_answers', { ...body }).subscribe(() => { });
-                // }
+                this.utils.showToast('Your email address is required').then(async () => {
+                    
+                });
                 loading.dismiss().then(async () => {
-                    // await this.navController.navigateForward('/survey-score');
+                    await this.navController.navigateRoot('/tabs/surveys');
                 });
             });
         });

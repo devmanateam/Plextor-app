@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {Events, LoadingController, ModalController, NavController} from '@ionic/angular';
+import { Events, LoadingController, ModalController, NavController } from '@ionic/angular';
 import { CallNumber } from '@ionic-native/call-number/ngx';
-import {LanguageService} from '../../../services/language/language.service';
-import {UserInterfaceService} from '../../../services/user-interface/user-interface.service';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {Calendar, CalendarDay, CanvasRect, CoachingReview, Rect, Time, CoachingSession, UserProfile} from '../../../interface/interface';
-import {UtilsService} from '../../../services/utils/utils.service';
-import {CallModalPage} from '../../modals/call-modal/call-modal.page';
+import { LanguageService } from '../../../services/language/language.service';
+import { UserInterfaceService } from '../../../services/user-interface/user-interface.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { Calendar, CalendarDay, CanvasRect, CoachingReview, Rect, Time, CoachingSession, UserProfile } from '../../../interface/interface';
+import { UtilsService } from '../../../services/utils/utils.service';
+import { CallModalPage } from '../../modals/call-modal/call-modal.page';
 
 @Component({
-  selector: 'app-contacts',
-  templateUrl: './contacts.page.html',
-  styleUrls: ['./contacts.page.scss'],
+    selector: 'app-contacts',
+    templateUrl: './contacts.page.html',
+    styleUrls: ['./contacts.page.scss'],
 })
 export class ContactsPage implements OnInit {
 
@@ -23,7 +23,7 @@ export class ContactsPage implements OnInit {
     currentDate: string;
     calendar: Calendar;
     selectedDay: CalendarDay;
-    count: number;    
+    count: number;
 
     constructor(
         private http: HttpClient,
@@ -39,6 +39,7 @@ export class ContactsPage implements OnInit {
 
     async ngOnInit() {
     }
+
 
     async ionViewWillEnter() {
         this.ui.pageContainerScrollToTop(document.getElementsByClassName('page-container')[0] as HTMLDivElement);
@@ -59,11 +60,11 @@ export class ContactsPage implements OnInit {
     }
 
     checkScroll(e) {
-      if (this.ui.watchPageControllerScrolled(e.target)) {
-          this.events.publish('page-not-scrolled');
-      } else {
-          this.events.publish('page-scrolled');
-      }
+        if (this.ui.watchPageControllerScrolled(e.target)) {
+            this.events.publish('page-not-scrolled');
+        } else {
+            this.events.publish('page-scrolled');
+        }
     }
 
     toggleSessionScheduleOpened() {
@@ -73,6 +74,20 @@ export class ContactsPage implements OnInit {
     toggleSessionGuideOpened() {
         this.sessionGuideOpened = !this.sessionGuideOpened;
     }
+
+    // getUpcomingSessions() {
+    //     this.utils.showLoading().then(loading => {
+    //         const deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
+    //         this.http.get(environment.coachingApi + 'sessions', {
+    //             params: { ...deviceInfo }
+    //         }).subscribe((response: any) => {
+    //             this.sessions = response.data;
+    //             console.log('session ===> ', this.sessions);
+    //             this.showNotification();
+    //             loading.dismiss();
+    //         });
+    //     });
+    // }
 
     async getUpcomingSessions() {
         this.utils.showLoading().then(loading => {
@@ -84,6 +99,8 @@ export class ContactsPage implements OnInit {
                 month: this.calendar.month,
                 day: this.selectedDay.day,
             }).subscribe((response: any) => {
+                console.log(">>>>>>>>>>>upcoming sessions:", response);
+                
                 this.sessions = response;
                 this.count = response.length;
                 loading.dismiss();
@@ -94,7 +111,7 @@ export class ContactsPage implements OnInit {
     async getCalendarDates(direction?: string) {
         const result = await this.utils.showLoading({
             message: 'Loading Calendar...'
-        }).then( async (loading) => {
+        }).then(async (loading) => {
             await this.sendCalendarRequest(direction).then(async (calendar: Calendar) => {
                 this.calendar = calendar;
                 this.selectedDay = this.calendar.today as CalendarDay;
@@ -135,7 +152,7 @@ export class ContactsPage implements OnInit {
     async sendCalendarRequest(direction: string): Promise<Calendar> {
         return new Promise(resolve => {
             const deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
-            const params = {...deviceInfo};
+            const params = { ...deviceInfo };
             if (this.currentDate !== '') {
                 params.date = this.currentDate;
             }

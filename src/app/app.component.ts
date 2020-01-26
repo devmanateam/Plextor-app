@@ -21,8 +21,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   isLoading: boolean;
   loadingOptions: LoadingControllerOption;
-  SDK_KEY = '9ZDl5tKRk86RbP6MKcCw0Vj0sIlxv12SYscD';
-  SDK_SECRET = 'DQg5lSPwKMNp3FJxBdj3t8G0XvozDnedJ4Yt';
+  SDK_KEY = 'wKIblPfTu0qsmVRyylc3FpMAhkzNkcAshqgE';
+  SDK_SECRET = 'e6ZkwHFawBwZigaTUXvmw755WSKOD5YxKO8J';
 
   constructor(
     private platform: Platform,

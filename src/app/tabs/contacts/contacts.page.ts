@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Events, LoadingController, ModalController, NavController } from '@ionic/angular';
+import { Events, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { LanguageService } from '../../../services/language/language.service';
 import { UserInterfaceService } from '../../../services/user-interface/user-interface.service';
@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { Calendar, CalendarDay, CanvasRect, CoachingReview, Rect, Time, CoachingSession, UserProfile } from '../../../interface/interface';
 import { UtilsService } from '../../../services/utils/utils.service';
 import { CallModalPage } from '../../modals/call-modal/call-modal.page';
+import { Zoom } from '@ionic-native/zoom/ngx';
 
 @Component({
     selector: 'app-contacts',
@@ -16,6 +17,9 @@ import { CallModalPage } from '../../modals/call-modal/call-modal.page';
 })
 export class ContactsPage implements OnInit {
 
+    zoomToken = '';
+    zoomAccessToken = '';
+    userId = '';
     timelineData: any[];
     sessionScheduleOpened: boolean;
     sessionGuideOpened: boolean;
@@ -34,6 +38,7 @@ export class ContactsPage implements OnInit {
         private ui: UserInterfaceService,
         private utils: UtilsService,
         private callNumber: CallNumber,
+        private zoomService: Zoom, private toastCtrl: ToastController
     ) {
     }
 
@@ -100,7 +105,7 @@ export class ContactsPage implements OnInit {
                 day: this.selectedDay.day,
             }).subscribe((response: any) => {
                 console.log(">>>>>>>>>>>upcoming sessions:", response);
-                
+
                 this.sessions = response;
                 this.count = response.length;
                 loading.dismiss();
@@ -140,15 +145,62 @@ export class ContactsPage implements OnInit {
         return timestamp.substring(11, 16);
     }
 
-    callNow(index) {
-        if (this.callNumber.isCallSupported()) {
-            this.callNumber.callNumber(this.sessions[index].phone, true)
-                .then(res => console.log('Launched dialer!', res))
-                .catch(err => console.log('Error launching dialer', err));
-        }
-        else console.log("Call is not supported in this device!");
+    callNow(session) {
+        console.log("session:", session);
+        const options = {
+            no_driving_mode: true,
+            no_invite: true,
+            no_meeting_end_message: true,
+            no_titlebar: false,
+            no_bottom_toolbar: false,
+            no_dial_in_via_phone: true,
+            no_dial_out_to_phone: true,
+            no_disconnect_audio: true,
+            no_share: true,
+            no_audio: true,
+            no_video: true,
+            no_meeting_error_message: true
+        };
+        let meetingNumber = session.meetingid;
+        alert("meeting number:" + JSON.stringify(session));
+        // let meetingNumber = '364-499-973';
+        let meetingPassword = '';
+        let displayName = session.name;
+        // Call join meeting method.
+        // this.zoomService.startMeeting(meetingNumber, options).then((success) => {
+        //     console.log(success);
+        //     this.presentToast(success);
+        // }).catch((error) => {
+        //     console.log(error);
+        //     this.presentToast(error);
+        // });
+        // this.zoomService.startMeetingWithZAK(meetingNumber,
+        //     displayName, this.zoomToken, this.zoomAccessToken, this.userId, options).then((success) => {
+        //         console.log(success);
+        //         this.presentToast(success);
+        //     }).catch((error) => {
+        //         console.log(error);
+        //         this.presentToast(error);
+        //     });
+        this.zoomService.joinMeeting(meetingNumber, meetingPassword, displayName, options)
+            .then((success) => {
+                console.log(success);
+                this.presentToast(success);
+            }).catch((error) => {
+                console.log(error);
+                this.presentToast(error);
+            });
+
     }
 
+    async presentToast(text) {
+        const toast = await this.toastCtrl.create({
+            message: text,
+            duration: 10000,
+            position: 'top'
+        });
+        toast.present();
+    }
     async sendCalendarRequest(direction: string): Promise<Calendar> {
         return new Promise(resolve => {
             const deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));

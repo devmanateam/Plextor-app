@@ -55,7 +55,7 @@
 
           <ion-item class="time-picker userList">
             <ion-list class="min-width-100" *ngIf="count">
-              <ion-item class="userItem" *ngFor="let session of sessions; let i = index" (click)="callNow(i)">
+              <ion-item class="userItem" *ngFor="let session of sessions; let i = index" (click)="callNow(session)">
                 <div class="d-flex">
                   <div class="header">
                     <div class="avatar">

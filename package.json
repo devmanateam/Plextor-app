@@ -116,8 +116,7 @@
   },
   "main": "karma.conf.js",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bai1991321/Plextor-app.git"
+    "type": "git"   
   },
   "license": "ISC",
   "bugs": {
